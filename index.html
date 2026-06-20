@@ -2,17 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
   <title>Lo.Krain — Io</title>
+  <meta
+    name="description"
+    content="Lo.Krain — Io. A release page with the full album stream, lyrics and release notes."
+  />
+  <meta name="theme-color" content="#0b1119" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="format-detection" content="telephone=no" />
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="cover.jpg" />
-  <link rel="apple-touch-icon" href="cover.jpg" />
-  <meta name="theme-color" content="#0b1320" />
+  <link rel="canonical" href="https://lokrainmyth.github.io/lokrain-io/" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="manifest" href="site.webmanifest" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Lo.Krain — Io" />
+  <meta
+    property="og:description"
+    content="A release page for Io — stream the album, read lyrics and explore the release notes."
+  />
+  <meta property="og:url" content="https://lokrainmyth.github.io/lokrain-io/" />
+  <meta property="og:image" content="https://lokrainmyth.github.io/lokrain-io/social-cover.jpg" />
+  <meta property="og:image:alt" content="Lo.Krain — Io album artwork" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Lo.Krain — Io" />
+  <meta
+    name="twitter:description"
+    content="A release page for Io — stream the album, read lyrics and explore the release notes."
+  />
+  <meta name="twitter:image" content="https://lokrainmyth.github.io/lokrain-io/social-cover.jpg" />
+
+  <link rel="preload" as="image" href="cover.jpg" />
+  <link rel="preload" as="image" href="artist.jpg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -20,67 +58,78 @@
   <div class="noise"></div>
 
   <main class="release-page">
-    <section class="release-layout">
-
-      <!-- LEFT COLUMN -->
+    <div class="release-layout">
+      <!-- SIDEBAR -->
       <aside class="release-sidebar">
-        <div class="cover-panel">
+        <section class="cover-panel">
           <img src="cover.jpg" alt="Io album cover" class="cover-image" />
-        </div>
+        </section>
 
-        <div class="album-copy card">
-          <div class="eyebrow">Release</div>
+        <section class="card album-copy">
+          <div class="eyebrow">Album</div>
           <h2 class="copy-title">Io</h2>
           <p class="copy-text">
-            An album that closes a 15-year journey from night to dawn.
-            Even if your path feels unclear now, that doesn’t make it meaningless.
+            An album that concludes a 15-year journey through night to dawn.
+            Even if you don't understand your path now, that doesn't mean it's meaningless.
           </p>
-        </div>
+        </section>
 
-        <div class="artist-card card">
+        <section class="card artist-card">
           <img src="artist.jpg" alt="Lo.Krain" class="artist-photo" />
-          <div class="artist-meta">
+          <div>
             <div class="artist-name">Lo.Krain</div>
-            <div class="artist-sub">Artist / Project</div>
+            <div class="artist-sub">Independent release / 2026</div>
           </div>
-        </div>
+        </section>
 
-        <div class="links-card card">
-          <a class="external-link" href="https://lokrain.bandcamp.com/album/io" target="_blank" rel="noopener noreferrer">
-            Lo.Krain Myth
+        <section class="card links-card">
+          <div class="eyebrow">Links</div>
+          <a
+            class="external-link"
+            href="https://lokrain.bandcamp.com/album/io"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Lo.Krain Myth / Bandcamp
           </a>
-          <a class="external-link" href="https://youtu.be/314YBGas0OQ" target="_blank" rel="noopener noreferrer">
-            Virtual CD
+
+          <a
+            class="external-link"
+            href="https://youtu.be/314YBGas0OQ"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Play Virtual CD / YouTube
           </a>
-        </div>
+        </section>
       </aside>
 
-      <!-- RIGHT COLUMN -->
-      <section class="player-section card">
-        <div class="player-header">
+      <!-- MAIN -->
+      <section class="card player-section">
+        <header class="player-header">
           <div class="player-header-main">
-            <div class="eyebrow">Album</div>
-            <h1 class="release-title">Io</h1>
-            <div class="release-meta">Lo.Krain · 2026</div>
+            <div class="eyebrow">Release page</div>
+            <h1 class="release-title">Lo.Krain — Io</h1>
+            <div class="release-meta">10 tracks · 29:29 · Released June 21, 2026</div>
           </div>
 
           <div class="visual-side">
-            <div class="disc-stack">
+            <div class="disc-stack" aria-hidden="true">
               <div class="disc-shadow"></div>
               <div class="disc">
-                <img src="artist.jpg" alt="Artist visual" class="disc-image" />
+                <img src="artist.jpg" alt="" class="disc-image" />
               </div>
             </div>
           </div>
-        </div>
+        </header>
 
-        <div class="now-playing card-inline">
-          <div class="now-label">Now Playing</div>
+        <section class="card-inline now-playing">
+          <div class="now-label">Now playing</div>
           <div class="now-track" id="trackTitle">Путь</div>
           <div class="now-artist" id="trackArtist">Lo.Krain</div>
-        </div>
+        </section>
 
-        <div class="progress-section">
+        <section class="card-inline progress-section">
           <div class="progress-wrap" id="progressWrap">
             <div class="progress-bar">
               <div class="progress" id="progress"></div>
@@ -91,35 +140,375 @@
             <span id="currentTime">0:00</span>
             <span id="duration">0:00</span>
           </div>
-        </div>
+        </section>
 
-        <div class="controls">
-          <button class="control-btn" id="prevBtn" aria-label="Previous">⏮</button>
+        <section class="controls">
+          <button class="control-btn" id="prevBtn" aria-label="Previous track">⏮</button>
           <button class="control-btn main-btn" id="playBtn" aria-label="Play / Pause">▶</button>
-          <button class="control-btn" id="nextBtn" aria-label="Next">⏭</button>
-        </div>
+          <button class="control-btn" id="nextBtn" aria-label="Next track">⏭</button>
+        </section>
 
-        <div class="sub-controls">
-          <button class="mini-btn" id="shuffleBtn">Shuffle: Off</button>
-          <button class="mini-btn" id="repeatBtn">Repeat: All</button>
+        <section class="sub-controls">
+          <div class="sub-controls-left">
+            <button class="mini-btn" id="shuffleBtn">Shuffle: Off</button>
+            <button class="mini-btn" id="repeatBtn">Repeat: All</button>
+          </div>
 
           <div class="volume-box">
             <span>Volume</span>
-            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1" />
+            <input
+              type="range"
+              id="volumeSlider"
+              min="0"
+              max="1"
+              step="0.01"
+              value="1"
+              aria-label="Volume"
+            />
           </div>
-        </div>
+        </section>
 
-        <div class="playlist-head">
+        <section class="playlist-head">
           <div class="playlist-title">Tracklist</div>
-          <div class="playlist-count" id="playlistCount">10 tracks</div>
-        </div>
+          <div class="playlist-count" id="playlistCount"></div>
+        </section>
 
-        <div class="playlist" id="playlist"></div>
+        <section class="playlist" id="playlist"></section>
+
+        <section class="content-grid">
+          <article class="card content-card release-notes-card">
+            <div class="content-card-head">
+              <div class="eyebrow">About</div>
+              <h2 class="content-title">Release Notes</h2>
+            </div>
+
+            <div class="release-notes">
+              <p>
+                Lo.Krain — это проект, который 15 лет складывался интуитивно.
+                Я никогда не знал заранее, о чём будет следующая песня или альбом.
+                Сначала приходили чувство, музыка, отдельные фразы, образы — и только спустя годы
+                я увидел, что всё это время повторялся один и тот же путь:
+                изгнание, ночь, пустые города, долгий поиск связи и рассвет.
+              </p>
+
+              <p>
+                Новый альбом — это точка, в которой этот путь впервые осознаётся целиком.
+                Он о том, что даже если ты не понимаешь свой путь сейчас, это не значит,
+                что в нём нет смысла. Иногда смысл приходит только на рассвете.
+              </p>
+
+              <p>
+                Io — альбом, в котором интуиция и спонтанность окончательно взяли верх над
+                желанием «сделать круто». Это результат моих творческих экспериментов с 2021 года,
+                но сам альбом был записан буквально за несколько дней. Я ещё некоторое время думал,
+                что в нём нужно изменить, но понял, что первый импульс и искренность важнее.
+                Работа над записью стала такой же лёгкой и спонтанной, как и мой способ создания песен.
+              </p>
+            </div>
+
+            <div class="credits-block">
+              <div class="credits-row">
+                <span class="credits-label">Written, produced and arranged by</span>
+                <span class="credits-value">Yura Vatolin</span>
+              </div>
+              <div class="credits-row">
+                <span class="credits-label">Mixed and mastered by</span>
+                <span class="credits-value">Yura Vatolin</span>
+              </div>
+              <div class="credits-row">
+                <span class="credits-label">Artwork and visual concept by</span>
+                <span class="credits-value">Yura Vatolin</span>
+              </div>
+              <div class="credits-row">
+                <span class="credits-label">Released</span>
+                <span class="credits-value">June 21, 2026</span>
+              </div>
+              <div class="credits-row">
+                <span class="credits-label">Tracks / Running time</span>
+                <span class="credits-value">10 / 29:29</span>
+              </div>
+              <div class="credits-row">
+                <span class="credits-label">Genre</span>
+                <span class="credits-value">Indie</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card content-card lyrics-card">
+            <div class="content-card-head">
+              <div class="eyebrow">Texts</div>
+              <h2 class="content-title">Lyrics</h2>
+            </div>
+
+            <div class="lyrics-list">
+              <details class="lyrics-item">
+                <summary>
+                  <span class="lyrics-num">01</span>
+                  <span class="lyrics-name">Путь</span>
+                </summary>
+                <div class="lyrics-body">
+                  <p>
+                    Путь через ночь<br />
+                    Я уезжаю прочь<br />
+                    Сон мог бы помочь<br />
+                    Но я не знаю
+                  </p>
+                  <p>
+                    Путь через ночь<br />
+                    Через реку без моста<br />
+                    Сон уходит прочь<br />
+                    И я не знаю, что сказать
+                  </p>
+                </div>
+              </details>
+
+              <details class="lyrics-item">
+                <summary>
+                  <span class="lyrics-num">02</span>
+                  <span class="lyrics-name">Кофе с собой</span>
+                </summary>
+                <div class="lyrics-body">
+                  <p>
+                    Перестань<br />
+                    Нас могут слышать<br />
+                    Нас не должны видеть тут<br />
+                    И я не знаю<br />
+                    Сможешь ли ты стать мне другом<br />
+                    Но мне так хорошо когда ты рядом
+                  </p>
+                  <p>
+                    Нам кофе с собой<br />
+                    И два места<br />
+                    Мы будем с тобой рядом<br />
+                    До конца
+                  </p>
+                  <p>
+                    Впереди<br />
+                    Две недели приключений нас ждут<br />
+                    И даже если они она с тобой найдут<br />
+                    Мы будем впереди их на два шага<br />
+                    Нам кофе с собой<br />
+                    И два места<br />
+                    Мы будем с тобой рядом До конца
+                  </p>
+                </div>
+              </details>
+
+              <details class="lyrics-item">
+                <summary>
+                  <span class="lyrics-num">03</span>
+                  <span class="lyrics-name">Друг</span>
+                </summary>
+                <div class="lyrics-body">
+                  <p>
+                    Весна нам с тобой достанется<br />
+                    Мне так все это нравится<br />
+                    Путь в душе ничего не болит<br />
+                    Время лечит, время летит
+                  </p>
+                  <p>
+                    Даже если ничего впереди<br />
+                    Я хочу узнать тебя<br />
+                    Подожди!<br />
+                    Даже если нам не быть вместе вдруг<br />
+                    Я хочу узнать тебя милый друг
+                  </p>
+                  <p>
+                    Я хочу узнать!
+                  </p>
+                </div>
+              </details>
+
+              <details class="lyrics-item">
+                <summary>
+                  <span class="lyrics-num">04</span>
+                  <span class="lyrics-name">Небо тёмное</span>
+                </summary>
+                <div class="lyrics-body">
+                  <p>
+                    Небо тёмное<br />
+                    Мысли стрёмные<br />
+                    Мы с тобой далеко ушли<br />
+                    Мы хотели выжить<br />
+                    Но не смогли<br />
+                    И теперь мы здесь
+                  </p>
+                  <p>
+                    Подождем до весны<br />
+                    А там посмотрим кому мы нужны<br />
+                    Подождем до весны<br />
+                    А там узнаем кому мы нужны
+                  </p>
+                  <p>
+                    Море чёрное<br />
+                    Мысли стрёмные<br />
+                    Мы с тобой глубоко ушли<br />
+                    Мы хотели выжить<br />
+                    Но не смогли<br />
+                    И теперь мы здесь
+                  </p>
+                  <p>
+                    Подождем до весны<br />
+                    А там посмотрим кому мы нужны<br />
+                    Подождем до весны<br />
+                    А там узнаем кому мы нужны
+                  </p>
+                </div>
+              </details>
+
+              <details class="lyrics-item">
+                <summary>
+                  <span class="lyrics-num">05</span>
+                  <span class="lyrics-name">Догола</span>
+                </summary>
+                <div class="lyrics-body">
+                  <p>
+                    До темна догулять<br />
+                    Догола раздеться<br />
+                    Лечь в кровать<br />
+                    Вспоминать как там было в детстве<br />
+                    У забора река<br />
+                    Пели рыбам песни<br />
+                    Были вместе всегда<br />
+                    Не разлей вода
+                  </p>
+                  <p>Играй!</p>
+                  <p>
+                    В пять утра<br />
+                    Затемно, пока никто не видит<br />
+                    В темный лес ты идешь<br />
+                    Чтобы никто не слышал<br />
+                    Ты в шкатулку сложи<br />
+                    Все свои секреты<br />
+                    Глубоко закопай<br />
+                    И иди домой
+                  </p>
+                  <p>Играй!</p>
+                </div>
+              </details>
+
+              <details class="lyrics-item">
+                <summary>
+                  <span class="lyrics-num">06</span>
+                  <span class="lyrics-name">Грустная музыка</span>
+                </summary>
+                <div class="lyrics-body">
+                  <p>
+                    Я хочу играть грустную музыку<br />
+                    Для тебя<br />
+                    Глупые мечты уже не сбудутся<br />
+                    Никогда
+                  </p>
+                </div>
+              </details>
+
+              <details class="lyrics-item">
+                <summary>
+                  <span class="lyrics-num">07</span>
+                  <span class="lyrics-name">Декабрь</span>
+                </summary>
+                <div class="lyrics-body">
+                  <p>
+                    Древнее море без сна<br />
+                    Тихо стекает луна<br />
+                    Древнее море не спит<br />
+                    Смотрит как время летит<br />
+                    В декабре
+                  </p>
+                </div>
+              </details>
+
+              <details class="lyrics-item">
+                <summary>
+                  <span class="lyrics-num">08</span>
+                  <span class="lyrics-name">17</span>
+                </summary>
+                <div class="lyrics-body">
+                  <p>
+                    Моя душа это папироса<br />
+                    Окурок у обочины<br />
+                    Я такой, не смотри на возраст<br />
+                    Мне всего 17 лет
+                  </p>
+                  <p>
+                    Лето догорает зря<br />
+                    Мама, я продал себя<br />
+                    Я не стал кем я мечтал быть<br />
+                    Мама, я устал
+                  </p>
+                </div>
+              </details>
+
+              <details class="lyrics-item">
+                <summary>
+                  <span class="lyrics-num">09</span>
+                  <span class="lyrics-name">Красиво</span>
+                </summary>
+                <div class="lyrics-body">
+                  <p>
+                    Ты лежала красиво<br />
+                    В небо руки раскинув<br />
+                    Кровь текла на кольцо<br />
+                    И разбито лицо<br />
+                    Нежно ноги расставив<br />
+                    Туфли где-то остались<br />
+                    У дороги ночной<br />
+                    Но тебе все равно
+                  </p>
+                  <p>
+                    Если есть в жизни радость<br />
+                    Если есть любовь<br />
+                    Ощутить твою сладость<br />
+                    Я хотел бы вновь<br />
+                    Твои раны открыты<br />
+                    В волосах цветы<br />
+                    Твое сердце разбито<br />
+                    И разбита ты
+                  </p>
+                </div>
+              </details>
+
+              <details class="lyrics-item">
+                <summary>
+                  <span class="lyrics-num">10</span>
+                  <span class="lyrics-name">Рассвет</span>
+                </summary>
+                <div class="lyrics-body">
+                  <p>
+                    Я доверял тебе все свои разговоры<br />
+                    Позади горы, а впереди рассвет<br />
+                    Солнце плетет в глазах цветные узоры<br />
+                    Позади склоны, а впереди рассвет
+                  </p>
+                  <p>
+                    Я оставлю все как есть<br />
+                    И не вернусь туда<br />
+                    Этот город не для меня<br />
+                    Я забуду кто ты есть<br />
+                    И не вернусь туда<br />
+                    Этот город не для меня
+                  </p>
+                  <p>
+                    Если ты хочешь ты можешь выпить кофе у нас<br />
+                    Мы всегда открыты 24/7 для таких как ты<br />
+                    Сладкие булочки и мягкие пирожки тебя ждут у дороги<br />
+                    Мы навсегда избавим тебя от тоски
+                  </p>
+                </div>
+              </details>
+            </div>
+          </article>
+        </section>
+
+        <footer class="release-footer">
+          <div>Lo.Krain — Io</div>
+          <div>2026</div>
+        </footer>
+
+        <audio id="audio" preload="metadata"></audio>
       </section>
-    </section>
+    </div>
   </main>
-
-  <audio id="audio" preload="metadata"></audio>
 
   <script src="script.js"></script>
 </body>
