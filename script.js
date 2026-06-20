@@ -11,7 +11,7 @@ const tracks = [
   { title: "Рассвет", artist: "Lo.Krain", src: "10-rassvet.mp3" }
 ];
 
-const STORAGE_KEY = "lo-krain-io-player-state-v3";
+const STORAGE_KEY = "lo-krain-io-player-state-v4";
 
 const audio = document.getElementById("audio");
 const trackTitle = document.getElementById("trackTitle");
