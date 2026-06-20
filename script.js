@@ -11,7 +11,7 @@ const tracks = [
   { title: "Рассвет", artist: "Lo.Krain", src: "10-rassvet.mp3" }
 ];
 
-const STORAGE_KEY = "lo-krain-io-player-state-v2";
+const STORAGE_KEY = "lo-krain-io-player-state-v3";
 
 const audio = document.getElementById("audio");
 const trackTitle = document.getElementById("trackTitle");
@@ -138,6 +138,36 @@ function updateActiveTrack() {
   });
 }
 
+function getCoverUrl() {
+  return new URL("cover.jpg", window.location.href).href;
+}
+
+function updateMediaSession() {
+  if (!("mediaSession" in navigator)) return;
+
+  const track = tracks[currentTrack];
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: track.title,
+    artist: track.artist,
+    album: "Io",
+    artwork: [
+      { src: getCoverUrl(), sizes: "96x96", type: "image/jpeg" },
+      { src: getCoverUrl(), sizes: "192x192", type: "image/jpeg" },
+      { src: getCoverUrl(), sizes: "512x512", type: "image/jpeg" }
+    ]
+  });
+
+  navigator.mediaSession.setActionHandler("play", () => playTrack());
+  navigator.mediaSession.setActionHandler("pause", () => pauseTrack());
+  navigator.mediaSession.setActionHandler("previoustrack", () => prevTrack());
+  navigator.mediaSession.setActionHandler("nexttrack", () => nextTrack());
+
+  try {
+    navigator.mediaSession.setActionHandler("seekbackward", null);
+    navigator.mediaSession.setActionHandler("seekforward", null);
+  } catch (e) {}
+}
+
 function loadTrack(index, autoplay = false, restoreTime = 0) {
   const track = tracks[index];
 
@@ -149,6 +179,7 @@ function loadTrack(index, autoplay = false, restoreTime = 0) {
   durationEl.textContent = "0:00";
 
   updateActiveTrack();
+  updateMediaSession();
   saveState();
 
   audio.addEventListener(
@@ -177,6 +208,9 @@ function playTrack() {
       playBtn.textContent = "⏸";
       updateActiveTrack();
       saveState();
+      if ("mediaSession" in navigator) {
+        navigator.mediaSession.playbackState = "playing";
+      }
     })
     .catch((error) => {
       console.error("Playback error:", error);
@@ -190,6 +224,9 @@ function pauseTrack() {
   playBtn.textContent = "▶";
   updateActiveTrack();
   saveState();
+  if ("mediaSession" in navigator) {
+    navigator.mediaSession.playbackState = "paused";
+  }
 }
 
 function togglePlay() {
@@ -310,6 +347,9 @@ audio.addEventListener("pause", () => {
   playBtn.textContent = "▶";
   updateActiveTrack();
   saveState();
+  if ("mediaSession" in navigator) {
+    navigator.mediaSession.playbackState = "paused";
+  }
 });
 
 audio.addEventListener("play", () => {
@@ -317,6 +357,9 @@ audio.addEventListener("play", () => {
   playBtn.textContent = "⏸";
   updateActiveTrack();
   saveState();
+  if ("mediaSession" in navigator) {
+    navigator.mediaSession.playbackState = "playing";
+  }
 });
 
 audio.addEventListener("ended", () => {
@@ -340,3 +383,4 @@ loadTrack(currentTrack, false, restoredTime);
 renderPlaylist();
 updateShuffleButton();
 updateRepeatButton();
+updateMediaSession();
