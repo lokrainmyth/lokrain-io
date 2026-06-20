@@ -11,7 +11,7 @@ const tracks = [
   { title: "Рассвет", artist: "Lo.Krain", src: "10-rassvet.mp3" }
 ];
 
-const STORAGE_KEY = "lo-krain-io-player-state-v1";
+const STORAGE_KEY = "lo-krain-io-player-state-v2";
 
 const audio = document.getElementById("audio");
 const trackTitle = document.getElementById("trackTitle");
@@ -56,12 +56,16 @@ function saveState() {
 
 function loadState() {
   const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return;
+  if (!raw) return 0;
 
   try {
     const state = JSON.parse(raw);
 
-    if (typeof state.currentTrack === "number" && state.currentTrack >= 0 && state.currentTrack < tracks.length) {
+    if (
+      typeof state.currentTrack === "number" &&
+      state.currentTrack >= 0 &&
+      state.currentTrack < tracks.length
+    ) {
       currentTrack = state.currentTrack;
     }
 
@@ -85,8 +89,9 @@ function loadState() {
     updateRepeatButton();
 
     return state.currentTime || 0;
-  } catch (e) {
-    console.error("Не удалось загрузить состояние плеера", e);
+  } catch (error) {
+    console.error("Failed to restore player state:", error);
+    return 0;
   }
 }
 
@@ -121,8 +126,8 @@ function updateActiveTrack() {
 
   items.forEach((item, index) => {
     item.classList.toggle("active", index === currentTrack);
-    const status = item.querySelector(".track-status");
 
+    const status = item.querySelector(".track-status");
     if (!status) return;
 
     if (index === currentTrack) {
@@ -135,12 +140,14 @@ function updateActiveTrack() {
 
 function loadTrack(index, autoplay = false, restoreTime = 0) {
   const track = tracks[index];
+
   audio.src = track.src;
   trackTitle.textContent = track.title;
   trackArtist.textContent = track.artist;
   progress.style.width = "0%";
   currentTimeEl.textContent = "0:00";
   durationEl.textContent = "0:00";
+
   updateActiveTrack();
   saveState();
 
@@ -171,9 +178,9 @@ function playTrack() {
       updateActiveTrack();
       saveState();
     })
-    .catch((err) => {
-      console.error("Ошибка воспроизведения:", err);
-      alert("Трек не удалось воспроизвести. Проверь, что mp3-файлы действительно загружены в репозиторий и доступны по тем именам, которые указаны в script.js.");
+    .catch((error) => {
+      console.error("Playback error:", error);
+      alert("The track could not be played. Check whether the audio files are uploaded correctly and the file names in script.js match them exactly.");
     });
 }
 
@@ -187,6 +194,7 @@ function pauseTrack() {
 
 function togglePlay() {
   if (!audio.src) return;
+
   if (isPlaying) {
     pauseTrack();
   } else {
@@ -232,6 +240,7 @@ function prevTrack() {
 
 function updateProgress() {
   if (!audio.duration) return;
+
   const percent = (audio.currentTime / audio.duration) * 100;
   progress.style.width = `${percent}%`;
   currentTimeEl.textContent = formatTime(audio.currentTime);
@@ -239,9 +248,9 @@ function updateProgress() {
   saveState();
 }
 
-function setProgress(e) {
+function setProgress(event) {
   const width = progressWrap.clientWidth;
-  const clickX = e.offsetX;
+  const clickX = event.offsetX;
   const duration = audio.duration;
   if (!duration) return;
   audio.currentTime = (clickX / width) * duration;
@@ -272,7 +281,11 @@ function cycleRepeatMode() {
 }
 
 function updateRepeatButton() {
-  const label = repeatMode === "all" ? "All" : repeatMode === "one" ? "One" : "Off";
+  const label =
+    repeatMode === "all" ? "All" :
+    repeatMode === "one" ? "One" :
+    "Off";
+
   repeatBtn.textContent = `Repeat: ${label}`;
   repeatBtn.classList.toggle("active", repeatMode !== "off");
 }
@@ -283,8 +296,8 @@ prevBtn.addEventListener("click", prevTrack);
 shuffleBtn.addEventListener("click", toggleShuffle);
 repeatBtn.addEventListener("click", cycleRepeatMode);
 
-volumeSlider.addEventListener("input", (e) => {
-  audio.volume = Number(e.target.value);
+volumeSlider.addEventListener("input", (event) => {
+  audio.volume = Number(event.target.value);
   saveState();
 });
 
@@ -322,7 +335,7 @@ audio.addEventListener("ended", () => {
   nextTrack();
 });
 
-const restoredTime = loadState() || 0;
+const restoredTime = loadState();
 loadTrack(currentTrack, false, restoredTime);
 renderPlaylist();
 updateShuffleButton();
