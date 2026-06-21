@@ -80,14 +80,10 @@ function loadTrack(index) {
   currentTrack = index;
   const track = tracks[currentTrack];
   audio.src = track.file;
-
-  /* В Now Playing без цифр */
   nowPlayingEl.textContent = track.title;
-
   progress.style.width = "0%";
   currentTimeEl.textContent = "0:00";
   durationEl.textContent = "0:00";
-
   updateActiveTrack();
   updateMediaSession();
 }
