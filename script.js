@@ -1,386 +1,228 @@
 const tracks = [
-  { title: "Путь", artist: "Lo.Krain", src: "01-put.mp3" },
-  { title: "Кофе с собой", artist: "Lo.Krain", src: "02-kofe-s-soboy.mp3" },
-  { title: "Друг", artist: "Lo.Krain", src: "03-drug.mp3" },
-  { title: "Небо тёмное", artist: "Lo.Krain", src: "04-nebo-temnoe.mp3" },
-  { title: "Догола", artist: "Lo.Krain", src: "05-dogola.mp3" },
-  { title: "Грустная музыка", artist: "Lo.Krain", src: "06-grustnaya-muzyka.mp3" },
-  { title: "Декабрь", artist: "Lo.Krain", src: "07-dekabr.mp3" },
-  { title: "17", artist: "Lo.Krain", src: "08-17.mp3" },
-  { title: "Красиво", artist: "Lo.Krain", src: "09-krasivo.mp3" },
-  { title: "Рассвет", artist: "Lo.Krain", src: "10-rassvet.mp3" }
+  { title: "Путь", file: "01-put.mp3" },
+  { title: "Кофе с собой", file: "02-kofe-s-soboy.mp3" },
+  { title: "Друг", file: "03-drug.mp3" },
+  { title: "Небо тёмное", file: "04-nebo-temnoe.mp3" },
+  { title: "Догола", file: "05-dogola.mp3" },
+  { title: "Грустная музыка", file: "06-grustnaya-muzyka.mp3" },
+  { title: "Декабрь", file: "07-dekabr.mp3" },
+  { title: "17", file: "08-17.mp3" },
+  { title: "Красиво", file: "09-krasivo.mp3" },
+  { title: "Рассвет", file: "10-rassvet.mp3" }
 ];
 
-const STORAGE_KEY = "lo-krain-io-player-state-v4";
-
 const audio = document.getElementById("audio");
-const trackTitle = document.getElementById("trackTitle");
-const trackArtist = document.getElementById("trackArtist");
+const playlistEl = document.getElementById("playlist");
 const playBtn = document.getElementById("playBtn");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
-const shuffleBtn = document.getElementById("shuffleBtn");
-const repeatBtn = document.getElementById("repeatBtn");
-const volumeSlider = document.getElementById("volumeSlider");
+const nowPlayingEl = document.getElementById("nowPlaying");
+const progressBar = document.getElementById("progressBar");
 const progress = document.getElementById("progress");
-const progressWrap = document.getElementById("progressWrap");
 const currentTimeEl = document.getElementById("currentTime");
 const durationEl = document.getElementById("duration");
-const playlistEl = document.getElementById("playlist");
-const playlistCount = document.getElementById("playlistCount");
 
 let currentTrack = 0;
 let isPlaying = false;
-let isShuffle = false;
-let repeatMode = "all"; // all | one | off
 
-playlistCount.textContent = `${tracks.length} tracks`;
-
-function formatTime(time) {
-  if (!isFinite(time)) return "0:00";
-  const minutes = Math.floor(time / 60);
-  const seconds = Math.floor(time % 60).toString().padStart(2, "0");
-  return `${minutes}:${seconds}`;
-}
-
-function saveState() {
-  const state = {
-    currentTrack,
-    currentTime: audio.currentTime || 0,
-    volume: audio.volume,
-    shuffle: isShuffle,
-    repeatMode
-  };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
-
-function loadState() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return 0;
-
-  try {
-    const state = JSON.parse(raw);
-
-    if (
-      typeof state.currentTrack === "number" &&
-      state.currentTrack >= 0 &&
-      state.currentTrack < tracks.length
-    ) {
-      currentTrack = state.currentTrack;
-    }
-
-    if (typeof state.volume === "number") {
-      audio.volume = state.volume;
-      volumeSlider.value = state.volume;
-    } else {
-      audio.volume = 1;
-      volumeSlider.value = 1;
-    }
-
-    if (typeof state.shuffle === "boolean") {
-      isShuffle = state.shuffle;
-    }
-
-    if (typeof state.repeatMode === "string") {
-      repeatMode = state.repeatMode;
-    }
-
-    updateShuffleButton();
-    updateRepeatButton();
-
-    return state.currentTime || 0;
-  } catch (error) {
-    console.error("Failed to restore player state:", error);
-    return 0;
-  }
+function formatTime(seconds) {
+  if (isNaN(seconds)) return "0:00";
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60).toString().padStart(2, "0");
+  return `${mins}:${secs}`;
 }
 
 function renderPlaylist() {
   playlistEl.innerHTML = "";
 
   tracks.forEach((track, index) => {
-    const item = document.createElement("div");
-    item.className = "track-item";
-    if (index === currentTrack) item.classList.add("active");
+    const li = document.createElement("li");
+    li.className = "track";
+    li.dataset.index = index;
 
-    item.innerHTML = `
-      <div class="track-num">${String(index + 1).padStart(2, "0")}</div>
-      <div class="track-main">
-        <div class="track-item-title">${track.title}</div>
-        <div class="track-item-artist">${track.artist}</div>
-      </div>
-      <div class="track-status">${index === currentTrack && isPlaying ? "⏸" : "♪"}</div>
+    li.innerHTML = `
+      <span class="track-index">${String(index + 1).padStart(2, "0")}</span>
+      <span class="track-title">${track.title}</span>
+      <span class="track-status">Play</span>
     `;
 
-    item.addEventListener("click", () => {
-      currentTrack = index;
-      loadTrack(currentTrack, true);
+    li.addEventListener("click", () => {
+      if (currentTrack === index) {
+        togglePlay();
+      } else {
+        loadTrack(index);
+        playAudio();
+      }
     });
 
-    playlistEl.appendChild(item);
+    playlistEl.appendChild(li);
   });
+
+  updateActiveTrack();
 }
 
 function updateActiveTrack() {
-  const items = document.querySelectorAll(".track-item");
-
+  const items = [...playlistEl.querySelectorAll(".track")];
   items.forEach((item, index) => {
     item.classList.toggle("active", index === currentTrack);
-
     const status = item.querySelector(".track-status");
     if (!status) return;
 
     if (index === currentTrack) {
-      status.textContent = isPlaying ? "⏸" : "▶";
+      status.textContent = isPlaying ? "Playing" : "Ready";
     } else {
-      status.textContent = "♪";
+      status.textContent = "Play";
     }
   });
 }
 
-function getCoverUrl() {
-  return new URL("cover.jpg", window.location.href).href;
+function loadTrack(index) {
+  currentTrack = index;
+  const track = tracks[currentTrack];
+  audio.src = track.file;
+  nowPlayingEl.textContent = `${String(currentTrack + 1).padStart(2, "0")}. ${track.title}`;
+  progress.style.width = "0%";
+  currentTimeEl.textContent = "0:00";
+  durationEl.textContent = "0:00";
+  updateActiveTrack();
+  updateMediaSession();
+}
+
+function playAudio() {
+  audio.play()
+    .then(() => {
+      isPlaying = true;
+      playBtn.textContent = "Pause";
+      updateActiveTrack();
+      updateMediaSessionPlayback();
+    })
+    .catch((err) => {
+      console.error("Playback error:", err);
+    });
+}
+
+function pauseAudio() {
+  audio.pause();
+  isPlaying = false;
+  playBtn.textContent = "Play";
+  updateActiveTrack();
+  updateMediaSessionPlayback();
+}
+
+function togglePlay() {
+  if (!audio.src) {
+    loadTrack(currentTrack);
+    playAudio();
+    return;
+  }
+
+  if (isPlaying) {
+    pauseAudio();
+  } else {
+    playAudio();
+  }
+}
+
+function nextTrack(autoPlay = true) {
+  currentTrack = (currentTrack + 1) % tracks.length;
+  loadTrack(currentTrack);
+  if (autoPlay) playAudio();
+}
+
+function prevTrack() {
+  currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
+  loadTrack(currentTrack);
+  playAudio();
+}
+
+function updateProgress() {
+  if (!audio.duration) return;
+  const percent = (audio.currentTime / audio.duration) * 100;
+  progress.style.width = `${percent}%`;
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+  durationEl.textContent = formatTime(audio.duration);
+
+  if ("mediaSession" in navigator && navigator.mediaSession.setPositionState) {
+    try {
+      navigator.mediaSession.setPositionState({
+        duration: audio.duration,
+        playbackRate: audio.playbackRate,
+        position: audio.currentTime
+      });
+    } catch (e) {}
+  }
+}
+
+function seek(e) {
+  if (!audio.duration) return;
+  const rect = progressBar.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+  const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+  audio.currentTime = ratio * audio.duration;
 }
 
 function updateMediaSession() {
   if (!("mediaSession" in navigator)) return;
 
   const track = tracks[currentTrack];
+
   navigator.mediaSession.metadata = new MediaMetadata({
     title: track.title,
-    artist: track.artist,
+    artist: "Lo.Krain",
     album: "Io",
     artwork: [
-      { src: getCoverUrl(), sizes: "96x96", type: "image/jpeg" },
-      { src: getCoverUrl(), sizes: "192x192", type: "image/jpeg" },
-      { src: getCoverUrl(), sizes: "512x512", type: "image/jpeg" }
+      { src: "cover.jpg", sizes: "512x512", type: "image/jpeg" },
+      { src: "apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      { src: "favicon-32x32.png", sizes: "32x32", type: "image/png" }
     ]
   });
 
-  navigator.mediaSession.setActionHandler("play", () => playTrack());
-  navigator.mediaSession.setActionHandler("pause", () => pauseTrack());
+  navigator.mediaSession.setActionHandler("play", () => playAudio());
+  navigator.mediaSession.setActionHandler("pause", () => pauseAudio());
   navigator.mediaSession.setActionHandler("previoustrack", () => prevTrack());
-  navigator.mediaSession.setActionHandler("nexttrack", () => nextTrack());
-
-  try {
-    navigator.mediaSession.setActionHandler("seekbackward", null);
-    navigator.mediaSession.setActionHandler("seekforward", null);
-  } catch (e) {}
+  navigator.mediaSession.setActionHandler("nexttrack", () => nextTrack(true));
+  navigator.mediaSession.setActionHandler("seekto", (details) => {
+    if (details.seekTime != null) {
+      audio.currentTime = details.seekTime;
+    }
+  });
 }
 
-function loadTrack(index, autoplay = false, restoreTime = 0) {
-  const track = tracks[index];
-
-  audio.src = track.src;
-  trackTitle.textContent = track.title;
-  trackArtist.textContent = track.artist;
-  progress.style.width = "0%";
-  currentTimeEl.textContent = "0:00";
-  durationEl.textContent = "0:00";
-
-  updateActiveTrack();
-  updateMediaSession();
-  saveState();
-
-  audio.addEventListener(
-    "loadedmetadata",
-    function handleLoaded() {
-      durationEl.textContent = formatTime(audio.duration);
-
-      if (restoreTime > 0 && restoreTime < audio.duration) {
-        audio.currentTime = restoreTime;
-      }
-
-      if (autoplay) {
-        playTrack();
-      }
-
-      audio.removeEventListener("loadedmetadata", handleLoaded);
-    },
-    { once: true }
-  );
-}
-
-function playTrack() {
-  audio.play()
-    .then(() => {
-      isPlaying = true;
-      playBtn.textContent = "⏸";
-      updateActiveTrack();
-      saveState();
-      if ("mediaSession" in navigator) {
-        navigator.mediaSession.playbackState = "playing";
-      }
-    })
-    .catch((error) => {
-      console.error("Playback error:", error);
-      alert("The track could not be played. Check whether the audio files are uploaded correctly and the file names in script.js match them exactly.");
-    });
-}
-
-function pauseTrack() {
-  audio.pause();
-  isPlaying = false;
-  playBtn.textContent = "▶";
-  updateActiveTrack();
-  saveState();
-  if ("mediaSession" in navigator) {
-    navigator.mediaSession.playbackState = "paused";
-  }
-}
-
-function togglePlay() {
-  if (!audio.src) return;
-
-  if (isPlaying) {
-    pauseTrack();
-  } else {
-    playTrack();
-  }
-}
-
-function getNextTrackIndex() {
-  if (isShuffle) {
-    if (tracks.length <= 1) return currentTrack;
-    let next;
-    do {
-      next = Math.floor(Math.random() * tracks.length);
-    } while (next === currentTrack);
-    return next;
-  }
-
-  let next = currentTrack + 1;
-  if (next >= tracks.length) next = 0;
-  return next;
-}
-
-function nextTrack() {
-  currentTrack = getNextTrackIndex();
-  loadTrack(currentTrack, true);
-}
-
-function prevTrack() {
-  if (audio.currentTime > 3) {
-    audio.currentTime = 0;
-    return;
-  }
-
-  if (isShuffle) {
-    currentTrack = getNextTrackIndex();
-  } else {
-    currentTrack--;
-    if (currentTrack < 0) currentTrack = tracks.length - 1;
-  }
-
-  loadTrack(currentTrack, true);
-}
-
-function updateProgress() {
-  if (!audio.duration) return;
-
-  const percent = (audio.currentTime / audio.duration) * 100;
-  progress.style.width = `${percent}%`;
-  currentTimeEl.textContent = formatTime(audio.currentTime);
-  durationEl.textContent = formatTime(audio.duration);
-  saveState();
-}
-
-function setProgress(event) {
-  const width = progressWrap.clientWidth;
-  const clickX = event.offsetX;
-  const duration = audio.duration;
-  if (!duration) return;
-  audio.currentTime = (clickX / width) * duration;
-}
-
-function toggleShuffle() {
-  isShuffle = !isShuffle;
-  updateShuffleButton();
-  saveState();
-}
-
-function updateShuffleButton() {
-  shuffleBtn.textContent = `Shuffle: ${isShuffle ? "On" : "Off"}`;
-  shuffleBtn.classList.toggle("active", isShuffle);
-}
-
-function cycleRepeatMode() {
-  if (repeatMode === "all") {
-    repeatMode = "one";
-  } else if (repeatMode === "one") {
-    repeatMode = "off";
-  } else {
-    repeatMode = "all";
-  }
-
-  updateRepeatButton();
-  saveState();
-}
-
-function updateRepeatButton() {
-  const label =
-    repeatMode === "all" ? "All" :
-    repeatMode === "one" ? "One" :
-    "Off";
-
-  repeatBtn.textContent = `Repeat: ${label}`;
-  repeatBtn.classList.toggle("active", repeatMode !== "off");
+function updateMediaSessionPlayback() {
+  if (!("mediaSession" in navigator)) return;
+  navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
 }
 
 playBtn.addEventListener("click", togglePlay);
-nextBtn.addEventListener("click", nextTrack);
 prevBtn.addEventListener("click", prevTrack);
-shuffleBtn.addEventListener("click", toggleShuffle);
-repeatBtn.addEventListener("click", cycleRepeatMode);
-
-volumeSlider.addEventListener("input", (event) => {
-  audio.volume = Number(event.target.value);
-  saveState();
-});
-
-progressWrap.addEventListener("click", setProgress);
+nextBtn.addEventListener("click", () => nextTrack(true));
+progressBar.addEventListener("click", seek);
 
 audio.addEventListener("timeupdate", updateProgress);
 
+audio.addEventListener("loadedmetadata", () => {
+  durationEl.textContent = formatTime(audio.duration);
+});
+
+audio.addEventListener("ended", () => {
+  nextTrack(true);
+});
+
 audio.addEventListener("pause", () => {
-  isPlaying = false;
-  playBtn.textContent = "▶";
-  updateActiveTrack();
-  saveState();
-  if ("mediaSession" in navigator) {
-    navigator.mediaSession.playbackState = "paused";
+  if (!audio.ended) {
+    isPlaying = false;
+    playBtn.textContent = "Play";
+    updateActiveTrack();
+    updateMediaSessionPlayback();
   }
 });
 
 audio.addEventListener("play", () => {
   isPlaying = true;
-  playBtn.textContent = "⏸";
+  playBtn.textContent = "Pause";
   updateActiveTrack();
-  saveState();
-  if ("mediaSession" in navigator) {
-    navigator.mediaSession.playbackState = "playing";
-  }
+  updateMediaSessionPlayback();
 });
 
-audio.addEventListener("ended", () => {
-  if (repeatMode === "one") {
-    audio.currentTime = 0;
-    playTrack();
-    return;
-  }
-
-  if (repeatMode === "off" && !isShuffle && currentTrack === tracks.length - 1) {
-    pauseTrack();
-    audio.currentTime = 0;
-    return;
-  }
-
-  nextTrack();
-});
-
-const restoredTime = loadState();
-loadTrack(currentTrack, false, restoredTime);
 renderPlaylist();
-updateShuffleButton();
-updateRepeatButton();
-updateMediaSession();
+loadTrack(0);
