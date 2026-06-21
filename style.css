@@ -1,6 +1,5 @@
 :root{
   --bg:#070707;
-  --bg2:#0d0c0a;
   --card:rgba(255,255,255,0.05);
   --card-2:rgba(255,255,255,0.035);
   --line:rgba(255,255,255,0.09);
@@ -11,8 +10,7 @@
   --accent-2:#e7c98d;
   --shadow:0 20px 60px rgba(0,0,0,.42);
   --radius:26px;
-  --radius-sm:18px;
-  --max:1180px;
+  --max:1260px;
 }
 
 *{box-sizing:border-box}
@@ -23,9 +21,9 @@ body{
   color:var(--text);
   font-family:Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background:
-    radial-gradient(circle at 78% 16%, rgba(219,175,88,.13), transparent 24%),
+    radial-gradient(circle at 78% 16%, rgba(219,175,88,.12), transparent 24%),
     radial-gradient(circle at 15% 82%, rgba(190,128,58,.08), transparent 24%),
-    linear-gradient(180deg, #060606 0%, #090909 32%, #0b0a08 62%, #0b0907 100%);
+    linear-gradient(180deg, #050505 0%, #080808 34%, #0a0907 66%, #0a0907 100%);
   min-height:100vh;
   overflow-x:hidden;
 }
@@ -38,7 +36,7 @@ body{
 .ambient{
   position:fixed;
   border-radius:50%;
-  filter:blur(80px);
+  filter:blur(90px);
   pointer-events:none;
   z-index:0;
 }
@@ -62,19 +60,126 @@ body{
   z-index:1;
   width:min(var(--max), calc(100% - 32px));
   margin:0 auto;
-  padding:36px 0 48px;
+  padding:34px 0 48px;
+}
+
+.layout-grid{
+  display:grid;
+  grid-template-columns:420px minmax(0, 1fr);
+  gap:28px;
+  align-items:start;
+}
+
+.visual-panel{
+  position:sticky;
+  top:26px;
+}
+
+.visual-card{
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+  border:1px solid var(--line);
+  border-radius:28px;
+  padding:22px;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(14px);
+}
+
+.visual-topline{
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--soft);
+  margin-bottom:8px;
+}
+
+.artist-name{
+  font-size:24px;
+  font-weight:600;
+  margin-bottom:20px;
+}
+
+.cover-scene{
+  position:relative;
+  width:100%;
+  aspect-ratio:1 / 1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:visible;
+}
+
+.cover-art{
+  position:relative;
+  z-index:3;
+  width:290px;
+  max-width:82%;
+  aspect-ratio:1 / 1;
+  object-fit:cover;
+  border-radius:22px;
+  box-shadow:
+    0 24px 70px rgba(0,0,0,.45),
+    0 0 0 1px rgba(255,255,255,.07);
+}
+
+.vinyl{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  width:220px;
+  aspect-ratio:1 / 1;
+  border-radius:50%;
+  z-index:2;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at center, #111 0 15%, #1a1a1a 15% 23%, #101010 23% 34%, #191919 34% 52%, #111 52% 70%, #181818 70% 100%);
+  box-shadow:
+    0 18px 50px rgba(0,0,0,.42),
+    inset 0 0 0 1px rgba(255,255,255,.06);
+}
+
+.vinyl-rings{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  background:
+    repeating-radial-gradient(circle at center,
+      rgba(255,255,255,.08) 0 1px,
+      rgba(255,255,255,0) 1px 12px);
+  opacity:.24;
+}
+
+.vinyl-artist{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:62%;
+  height:62%;
+  transform:translate(-50%,-50%);
+  object-fit:cover;
+  border-radius:50%;
+  filter:grayscale(.08) brightness(.92) contrast(1.02);
+  opacity:.92;
+}
+
+.vinyl-hole{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:14%;
+  height:14%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:#0a0a0a;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+}
+
+.content-panel{
+  min-width:0;
 }
 
 .hero{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(320px, 470px);
-  gap:42px;
-  align-items:center;
-  margin-bottom:28px;
-}
-
-.hero-left{
-  min-width:0;
+  margin-bottom:20px;
 }
 
 .eyebrow{
@@ -87,7 +192,7 @@ body{
 
 .album-title{
   margin:0;
-  font-size:clamp(48px, 7vw, 78px);
+  font-size:clamp(52px, 7vw, 82px);
   line-height:.95;
   font-weight:700;
   letter-spacing:-0.04em;
@@ -100,8 +205,8 @@ body{
 }
 
 .album-lead{
-  margin:26px 0 0;
-  max-width:620px;
+  margin:24px 0 0;
+  max-width:680px;
   color:var(--text);
   opacity:.92;
   line-height:1.75;
@@ -135,88 +240,10 @@ body{
   border-color:rgba(255,255,255,.18);
 }
 
-.hero-right{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-.cover-scene{
-  position:relative;
-  width:min(100%, 450px);
-  aspect-ratio:1 / 1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.cover-art{
-  position:relative;
-  z-index:3;
-  width:min(84vw, 340px);
-  aspect-ratio:1 / 1;
-  object-fit:cover;
-  border-radius:24px;
-  box-shadow:
-    0 24px 70px rgba(0,0,0,.45),
-    0 0 0 1px rgba(255,255,255,.07);
-}
-
-.vinyl{
-  position:absolute;
-  right:-2%;
-  top:50%;
-  transform:translateY(-50%);
-  width:min(68vw, 280px);
-  aspect-ratio:1 / 1;
-  border-radius:50%;
-  z-index:2;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at center, #111 0 15%, #1a1a1a 15% 23%, #101010 23% 34%, #191919 34% 52%, #111 52% 70%, #181818 70% 100%);
-  box-shadow:
-    0 18px 50px rgba(0,0,0,.42),
-    inset 0 0 0 1px rgba(255,255,255,.06);
-}
-
-.vinyl-rings{
-  position:absolute;
-  inset:0;
-  border-radius:50%;
-  background:
-    repeating-radial-gradient(circle at center,
-      rgba(255,255,255,.08) 0 1px,
-      rgba(255,255,255,0) 1px 12px);
-  opacity:.24;
-}
-
-.vinyl-artist{
-  position:absolute;
-  inset:18%;
-  width:64%;
-  height:64%;
-  object-fit:cover;
-  border-radius:50%;
-  filter:grayscale(.08) brightness(.92) contrast(1.02);
-  opacity:.9;
-}
-
-.vinyl-hole{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:14%;
-  height:14%;
-  transform:translate(-50%,-50%);
-  border-radius:50%;
-  background:#0a0a0a;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
-}
-
 .player-card{
   background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
   border:1px solid var(--line);
-  border-radius:var(--radius);
+  border-radius:26px;
   padding:24px;
   box-shadow:var(--shadow);
   backdrop-filter:blur(14px);
@@ -459,37 +486,26 @@ body{
   font-size:15px;
 }
 
-@media (max-width: 980px){
-  .hero{
+.credits-block p{
+  margin:0 0 8px;
+}
+.credits-block p:last-child{
+  margin-bottom:0;
+}
+
+@media (max-width: 1080px){
+  .layout-grid{
     grid-template-columns:1fr;
-    gap:24px;
   }
 
-  .hero-right{
-    order:-1;
+  .visual-panel{
+    position:relative;
+    top:0;
   }
 
-  .cover-scene{
-    width:min(100%, 390px);
+  .visual-card{
+    max-width:520px;
     margin:0 auto;
-  }
-
-  .cover-art{
-    width:min(78vw, 300px);
-  }
-
-  .vinyl{
-    width:min(58vw, 220px);
-    right:0;
-  }
-
-  .player-head{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-  .now-playing{
-    text-align:left;
   }
 }
 
@@ -508,9 +524,29 @@ body{
     margin-top:20px;
   }
 
+  .visual-card,
   .player-card{
     padding:18px;
     border-radius:22px;
+  }
+
+  .cover-art{
+    width:min(72vw, 290px);
+    max-width:none;
+  }
+
+  .vinyl{
+    width:min(52vw, 200px);
+    right:4px;
+  }
+
+  .player-head{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .now-playing{
+    text-align:left;
   }
 
   .progress-row{
